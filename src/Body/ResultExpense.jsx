@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useState } from 'react';
 import "./Todo.css"
-const ExpenseChart = ({ expenses }) => {
-  
+
+const ExpenseList = ({ expenses }) => {
+  const [selectedYear, setSelectedYear] = useState('All');
+  const handleYearChange = (e) => {
+    setSelectedYear(e.target.value);
+  };
+  const filteredExpenses = selectedYear === 'All'
+  ? expenses
+  : expenses.filter((expense) => expense.date.getFullYear().toString() === selectedYear);
   return (
-    <div>
+    <div className="ResultExpense">
+      <div>
       <div className="filter">
         <h2>Filter by year</h2>
-        <select >
+        <select value={selectedYear} onChange={handleYearChange} >
           <option value="All">All</option>
           <option value="2022">2022</option>
           <option value="2021">2021</option>
@@ -93,17 +101,9 @@ const ExpenseChart = ({ expenses }) => {
       
     </div>
     
-    
-  );
-};
-
-const ExpenseList = ({ expenses }) => {
-  
-  return (
-    <div>
       <ul className="expense-list">
-      {expenses.map((expense, index) => (
-        <li key={index}>
+      {filteredExpenses.map((expense, index) => (        
+    <li key={index}>
           <div className="card expense-item">
             <div className="expense-date">
               <div className="expense-date-month">{expense.date.toLocaleString('en-US', { month: 'long' })}</div>
@@ -127,10 +127,9 @@ const ExpenseList = ({ expenses }) => {
 
 const ResultExpense = ({ expenses }) => {
   return (
-    <div className="ResultExpense">
-      <ExpenseChart expenses={expenses} />
+    
       <ExpenseList expenses={expenses} />
-    </div>
+
   );
 };
 
